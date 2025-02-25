@@ -17,7 +17,9 @@ import java.util.List;
 @Table(name = "member")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class User implements UserDetails {
+
     // 제약조건 TODO
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

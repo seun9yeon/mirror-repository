@@ -2,7 +2,7 @@ package org.example.book_report.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.book_report.dto.requestDto.SignupRequestDto;
-import org.example.book_report.exception.ResourceConflictException;
+import org.example.book_report.global.exception.ResourceConflictException;
 import org.example.book_report.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
 
+    private final UserRepository userRepository;
 
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
@@ -36,5 +36,4 @@ public class UserService {
 
         return userRepository.existsByUsername(userName);
     }
-
 }
