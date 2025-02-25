@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/Home';
 import RootLayout from '../layouts/RootLayout';
-import BookReviewCreate from '../pages/BookReviewCreate';
+import BookReview from '../pages/BookReview';
 import BookReviewDetail from '../pages/BookReivewDetatil';
 import UserBookReview from '../pages/UserBookReview';
 import Login from '../pages/Login';
@@ -19,15 +19,15 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/reviews/create',
-        element: <BookReviewCreate />,
+        path: ['/reviews/create', '/reviews/modify/:reviewId'],
+        element: <BookReview />,
       },
       {
-        path: '/reviews/{reviewId}',
+        path: '/reviews/:reviewId',
         element: <BookReviewDetail />,
       },
       {
-        path: '/{username}/reviews',
+        path: '/userpage/:username',
         element: <UserBookReview />,
       },
     ],
