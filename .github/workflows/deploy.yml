@@ -1,0 +1,145 @@
+name : Deploy Service
+
+on: 
+ push:
+  branches:
+    - main
+    - chore/*
+
+
+jobs:
+  docker-build-push:
+    runs-on: ubuntu-24.04
+    steps:
+      # 소스 가져오기
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+        
+      # 디스코드로 메세지 전송 (Channel 1)
+      - name: Start Message (Channel 1)
+        # 라이브러리 개발자/라이브러리 이름@버전
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: ⭐Start Deploy⭐
+          color: 0xF09B59
+
+      - name: run ssh-agent, webfactory/ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # 원격 서버를 신회할 수 있는 서버로 등록하는 과정
+      - name: Add Remote Server Fingerprint to Known Hosts
+        run: ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
+
+      - name: Create .env file
+        run: |
+          echo "# S3" >> .env
+          echo "ACCESS_KEY=${{secrets.ACCESS_KEY}}" >> .env
+          echo "SECRET_KEY=${{secrets.SECRET_KEY}}" >> .env
+          echo "BUCKET_NAME=${{secrets.BUCKET_NAME}}" >> .env
+          echo "# EC2" >> .env
+          echo "DOMAIN=${{secrets.DOMAIN}}" >> .env
+          echo "API_SERVER=${{secrets.API_SERVER}}" >> .env
+          echo "# DB" >> .env
+          echo "MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}" >> .env
+          echo "MYSQL_DATABASE=${{secrets.MYSQL_DATABASE}}" >> .env
+          echo "# Backend" >> .env
+          echo "DATABASE_HOST=${{secrets.DATABASE_HOST}}" >> .env
+          echo "DATABASE_PORT=${{secrets.DATABASE_PORT}}" >> .env
+          echo "DATABASE_NAME=${{secrets.MYSQL_DATABASE}}" >> .env
+          echo "DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}}" >> .env
+          echo "DATABASE_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}" >> .env
+          echo "JWT_SECRET=${{secrets.JWT_SECRET}}" >> .env
+          echo "# Fronted" >> .env
+          echo "CLIENT_DOMAIN=${{secrets.DOMAIN}}" >> .env
+          echo "CORS_ALLOWED_ORIGIN=https://${{secrets.DOMAIN}}" >> .env
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> .env
+
+
+      # 캐시 저장 설정을 위한 actions(라이브러리)
+      - name: Set up Cache Repo
+        # actions/cache : 깃허브 캐시 저장소 활용을 위한 라이브러리
+        uses: actions/cache@v4.2.0
+        with:
+        # 캐시로 관리할 경로
+          path: /tmp/.buildx-cache
+          # cache를 구분하기 위한 식별자
+          # 불러올 캐시 이름
+          # 같은 이름으로 하면 캐싱이 유지됨
+          key: docker-${{ github.sha }}
+          # 만약 캐시 key를 찾지 못하면 실행할 key의 패턴
+          restore-keys: |
+            docker- 
+
+
+      # 캐시 관리 라이브러리 
+      - name: Set up Docker Buildkit
+        uses: docker/setup-buildx-action@v3
+
+        # 빌더 사용
+      - name: Create Buildkit Builder
+        run: |
+          docker buildx create --use --name buildkit
+
+      - name: Docker Image Build
+        # run: docker compose build
+        run: docker compose build --build-arg BUILDKIT_INLINE_CACHE=1
+
+
+      - name: Login DockerHub
+        run: echo '${{ secrets.DOCKER_PASSWORD }}' | docker login -u '${{ secrets.DOCKER_USERNAME }}' --password-stdin
+      
+      - name: Docker Image Push
+        run: docker compose push
+
+      - name: Copy .env / docker-compose.yml
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "docker-compose.yml, .env"
+          target: "~/work-directory"
+          
+      - name: Pull Image & Up Container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/work-directory
+            docker compose pull
+            docker compose down
+            docker compose up -d
+            docker system prune -f
+            
+      # Discord 알림 - 배포 성공
+      - name: Discord Notification - Success
+        if: success()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "🌞 Success Deploy 🌞"
+          description: |
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.event.head_commit.message }}
+          color: 0x75F94D
+      
+      # Discord 알림 - 배포 실패
+      - name: Discord Notification - Failure
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "😭 Failure Deploy 😭"
+          description: |
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.event.head_commit.message }}
+          color: 0xEA3680
