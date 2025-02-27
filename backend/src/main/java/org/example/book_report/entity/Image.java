@@ -3,7 +3,6 @@ package org.example.book_report.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.book_report.common.BaseTimeEntity;
-import org.example.book_report.dto.request.ImageUploadRequestDto;
 
 @Table(name = "image")
 @Entity
@@ -23,9 +22,5 @@ public class Image extends BaseTimeEntity {
 
     @Column(nullable = true)
     private String imageUrl;
-
-    @OneToOne
-    @JoinColumn(name = "member_image_id")
-    private UserImage userImage;
 
 }
