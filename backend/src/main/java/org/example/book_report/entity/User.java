@@ -49,8 +49,12 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserImage> userImages = new ArrayList<>();
 
     @Builder
     public User(String username, String password, String name, String phoneNumber, Role role) {
