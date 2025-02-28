@@ -1,5 +1,8 @@
 package org.example.book_report.controller;
 
+
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.example.book_report.common.ApiResponse;
 import org.example.book_report.dto.request.CreateReviewRequestDto;
@@ -7,6 +10,21 @@ import org.example.book_report.dto.request.UpdateBookReviewRequestDto;
 import org.example.book_report.dto.response.BookReviewDetailResponseDto;
 import org.example.book_report.dto.response.BookReviewToggleApprovedResponseDto;
 import org.example.book_report.dto.response.BookReviewsResponseDto;
+import org.example.book_report.dto.response.CreateReviewResponseDto;
+import org.example.book_report.service.BookReviewService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+
 import org.example.book_report.dto.response.UserCardImageResponseDto;
 import org.example.book_report.entity.ImageType;
 import org.example.book_report.entity.User;
@@ -19,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -129,5 +148,7 @@ public class BookReviewController {
             @RequestPart("data") CreateReviewRequestDto createReviewRequestDto,
             @RequestPart(value = "imageFile") MultipartFile imageFile) {
 
-    // 감상문 생성: 슬찬님
+        return bookReviewService.createReview(createReviewRequestDto, imageFile);
+    }
+
 }
