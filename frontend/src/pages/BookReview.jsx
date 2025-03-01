@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bookApi from '../api/bookApi';
 import reviewApi from '../api/reviewApi';
+import { useNavigate } from 'react-router-dom';
+import CardCreateSection from '../components/card/CardCreateSection';
 import styles from '../styles/BookReview.module.css';
 
 /**
@@ -233,6 +235,7 @@ export default function BookReview() {
             />
           </div>
         </div>
+        <CardCreateSection></CardCreateSection>
         <div className={styles.reviewInputFormWrapper}>
           <textarea
             name="content"
