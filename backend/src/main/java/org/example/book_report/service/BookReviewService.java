@@ -1,28 +1,21 @@
 package org.example.book_report.service;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.book_report.dto.request.CreateReviewRequestDto;
-import org.example.book_report.dto.response.BookReviewDetailResponseDto;
-import org.example.book_report.dto.response.BookReviewToggleApprovedResponseDto;
-import org.example.book_report.dto.response.BookReviewsResponseDto;
-import org.example.book_report.dto.response.CreateReviewResponseDto;
-import org.example.book_report.dto.response.ImageResponseDto;
-import org.example.book_report.dto.response.UserCardImageResponseDto;
-import org.example.book_report.entity.Book;
-import org.example.book_report.entity.BookReview;
-import org.example.book_report.entity.Image;
-import org.example.book_report.entity.ImageType;
-import org.example.book_report.entity.User;
-import org.example.book_report.entity.UserImage;
+import org.example.book_report.dto.response.*;
+import org.example.book_report.entity.*;
 import org.example.book_report.repository.BookRepository;
 import org.example.book_report.repository.BookReviewRepository;
 import org.example.book_report.repository.ImageRepository;
 import org.example.book_report.repository.UserImageRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,11 +44,6 @@ public class BookReviewService {
     @Transactional
     public void remove(Long reviewId) {
         bookReviewRepository.deleteById(reviewId);
-    }
-
-    public List<BookReviewsResponseDto> findAll() {
-
-        return bookReviewRepository.findAll().stream().map(BookReviewsResponseDto::from).toList();
     }
 
     @Transactional
@@ -97,5 +85,10 @@ public class BookReviewService {
         }).toList();
 
         return UserCardImageResponseDto.from(type, imageResponseDtos);
+    }
+
+    public BookReviewsWithPageResponseDto getBookReviews(String bookTitle, Pageable pageable) {
+        Page<BookReview> items = bookReviewRepository.getBookReviews(bookTitle, pageable);
+        return BookReviewsWithPageResponseDto.from(items);
     }
 }
