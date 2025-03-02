@@ -1,6 +1,7 @@
 .cardCreateSectionContainer {
   display: flex;
-  justify-content: space-around;
+  gap: 5%;
+  justify-content: center;
   box-sizing: border-box;
   padding: 1rem;
   margin: 1rem;
@@ -39,6 +40,8 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   cursor: text;
+  font-weight: bold;
+  line-height: 1.5;
 }
 
 .hiddenInput {
@@ -54,6 +57,8 @@
   background: transparent;
   resize: none;
   overflow: hidden;
+  font-weight: bold;
+  line-height: 1.5;
 }
 
 .inputText {
