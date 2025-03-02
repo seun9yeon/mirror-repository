@@ -30,30 +30,6 @@ export default function BookReview() {
 
   const [content, setContent] = useState();
 
-  const tempBookItems = [
-    {
-      bookId: 1,
-      imageUrl: 'https://placehold.co/400X600',
-      title: '책 제목1',
-      author: '작가1',
-      publisher: '출판사1',
-    },
-    {
-      bookId: 2,
-      imageUrl: 'https://placehold.co/400X600',
-      title: '책 제목2',
-      author: '작가2',
-      publisher: '출판사2',
-    },
-    {
-      bookId: 3,
-      imageUrl: 'https://placehold.co/400X600',
-      title: '책 제목3',
-      author: '작가3',
-      publisher: '출판사3',
-    },
-  ];
-
   /**
    * 입력 값에 따라 도서를 검색합니다.
    * @param {React.ChangeEvent<HTMLInputElement>} e - 입력 이벤트.
@@ -62,10 +38,12 @@ export default function BookReview() {
     const searchTitle = e.target.value;
     setSearchBook(searchTitle);
 
-    if (searchTitle) {
+    if (searchTitle !== '') {
       try {
         const response = await bookApi.searchBooks(searchTitle);
-        setBookItems(response.bookList.slice(0, 7));
+        let { hasNext, bookList } = response;
+        bookList = bookList.slice(0, 3);
+        setBookItems(bookList);
       } catch (error) {
         console.error(error);
       }
@@ -95,7 +73,9 @@ export default function BookReview() {
   const onUserInput = () => {
     cleanSearchTitle.current.value = '';
     setTitle(searchBook);
+
     setSearchBook('');
+
     removeBookInfo();
     setIsReadOnly(false);
   };
@@ -104,7 +84,7 @@ export default function BookReview() {
    * 상태에서 도서 정보를 제거합니다.
    */
   const removeBookInfo = () => {
-    setBookImage(null);
+    setBookImage('https://placehold.co/400X600');
     setBookImageFile(null);
     setAuthor(null);
     setPublisher(null);
@@ -124,6 +104,12 @@ export default function BookReview() {
    * 도서 리뷰를 API에 제출합니다.
    */
   const postBookReview = async () => {
+    // 임시로 카드 이미지랑 한줄평 set
+    setCardImage(
+      'https://shopping-phinf.pstatic.net/main_5118281/51182815714.20241105090357.jpg?type=w300',
+    );
+    setOnelineTitle('짱이다');
+
     let bookReview;
     if (bookId) {
       bookReview = {
@@ -151,7 +137,7 @@ export default function BookReview() {
           },
           review: {
             imageId: cardImage, // 카드 커버
-            title: '한줄평',
+            title: onelineTitle,
             content: content,
           },
         },
@@ -161,7 +147,8 @@ export default function BookReview() {
 
     try {
       const response = await reviewApi.createReview(bookReview);
-      navigate(`/reviews/${response.bookReviewId}`);
+      const { status, bookReviewId } = response;
+      navigate(`/reviews/${bookReviewId}`);
     } catch (error) {
       console.error(error);
     }
@@ -178,23 +165,37 @@ export default function BookReview() {
           onChange={handleSearchBookTitle}
         />
         <div className={styles.bookListWrapper}>
-          {searchBook !== '' && (
-            <div className={styles.bookList}>
-              {tempBookItems.map((book) => (
-                <div
-                  className={styles.bookItem}
-                  key={book.bookId}
-                  onClick={() => setBookInfo(book)}
-                >
-                  <img className={styles.bookImage} src={book.imageUrl} alt="" />
-                  <div className={styles.bookInfo}>
-                    <div className={styles.bookInfoItem}>{book.title}</div>
-                    <div className={styles.bookInfoItem}>{book.author}</div>
-                    <div className={styles.bookInfoItem}>{book.publisher}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          {searchBook && (
+            <>
+              <ul className={styles.bookList}>
+                {bookItems.length ? (
+                  <>
+                    {bookItems.map((book) => (
+                      <li
+                        className={styles.bookItem}
+                        key={book.bookId}
+                        onClick={() => setBookInfo(book)}
+                      >
+                        <img className={styles.bookImage} src={book.imageUrl} alt="" />
+                        <ul className={styles.bookInfo}>
+                          <li className={styles.bookInfoItem}>{book.title}</li>
+                          <li className={styles.bookInfoItem}>{book.author}</li>
+                          <li className={styles.bookInfoItem}>{book.publisher}</li>
+                        </ul>
+                      </li>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <li className={styles.bookItem} onClick={onUserInput}>
+                      <ul className={styles.bookInfo}>
+                        <li className={styles.bookInfoItem}>"{searchBook}" 직접 입력</li>
+                      </ul>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </>
           )}
         </div>
       </div>
@@ -202,9 +203,7 @@ export default function BookReview() {
       <div className={styles.bookReviewInputWrapper}>
         <div className={styles.bookInfoInputFormWrapper}>
           <img className={styles.bookImage} name="bookImage" src={bookImage} alt="" />
-          {!isReadOnly && (
-            <input type="file" accept="image/png, image/jpeg, image/jpg" onChange={addImage} />
-          )}
+
           <div className={styles.bookInfoInputForm}>
             <label className={styles.inputFormLabel}>제목</label>
             <input
@@ -234,7 +233,20 @@ export default function BookReview() {
             />
           </div>
         </div>
+
+        {!isReadOnly && (
+          <div className={styles.imageButtonWrapper}>
+            <input
+              className={styles.addImageButton}
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={addImage}
+            />
+          </div>
+        )}
+
         <CardCreateSection></CardCreateSection>
+
         <div className={styles.reviewInputFormWrapper}>
           <textarea
             name="content"
