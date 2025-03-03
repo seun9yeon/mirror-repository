@@ -26,7 +26,7 @@ const reviewApi = {
       }
 
       const response = await axios.post(`${REVIEWS_API}`, formData, {
-        headers: { 'Content-Type': undefined }, // 기본 설정을 덮어쓰지 않음
+        headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });
 
