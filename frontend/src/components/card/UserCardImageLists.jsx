@@ -95,7 +95,10 @@ export default function UserCardImageLists() {
           hidden
           onChange={addImage}
         />
-        <span className={styles.addButton}>+</span>
+        <div className={styles.addButtonWrapper}>
+          {size !== 8 && <span className={styles.addButton}>+</span>}
+          <span className={styles.imageCount}>{size}/8</span>
+        </div>
       </label>
     </ul>
   );
