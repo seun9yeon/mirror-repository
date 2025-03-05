@@ -12,23 +12,23 @@ export default function UserBookReview() {
   const [hasNext, setHasNext] = useState(true);
 
 
-  useEffect(() => {
-    setItems([]);
-    setPage(0);
-    setHasNext(true);
-  }, []);
 
   useEffect(() => {
-    if (hasNext) {
-      authApi.getUserReviews(username, page).then((response) => {
-        const reviews = response.data.userBookReviews || [];
-
-        setHasNext(response.data.hasNext);
-        setItems((prevItems) => [...prevItems, ...reviews]);
-      }).finally(() => {
-        setLoading(false);
-      });
-    }
+    const fetchReviews = async () => {
+      if (hasNext) {
+        try {
+          const response = await authApi.getUserReviews(username, page);
+          const reviews = response.data.userBookReviews || [];
+          
+          setHasNext(response.data.hasNext);
+          setItems((prevItems) => [...prevItems, ...reviews]);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    
+    fetchReviews();
   }, [page]);
 
   const handleScroll = useCallback(() => {
