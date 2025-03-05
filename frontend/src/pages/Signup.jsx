@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import authApi from '../api/authApi';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from '../styles/Signup.module.css';
+import logo from '../../public/book.png';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -44,11 +45,11 @@ export default function Signup() {
       const response = await authApi.verifyUsername(formData.username);
       const data = response.data;
       console.log(response);
-      
+
       setIsUsed(data.used);
       alert('사용 가능한 아이디입니다.');
       setIsChecked(!data.used);
-    } catch (e){
+    } catch (e) {
       console.error('입력값을 확인해주세요', e);
       setIsUsed(true);
     }
@@ -143,7 +144,7 @@ export default function Signup() {
   return (
     <div className={styles.signupContainer}>
       <Link to="/">
-        <h1>로고</h1>
+        <img src={logo} alt="" className={styles.logo} />
       </Link>
 
       <form onSubmit={handleSubmit} className={styles.formWrapper}>

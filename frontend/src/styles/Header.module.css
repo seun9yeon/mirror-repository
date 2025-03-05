@@ -8,7 +8,7 @@
   box-sizing: border-box;
   height: 12vh;
   max-height: 70px;
-  font-family: "Nanum Gothic Coding", monospace;
+  font-family: 'Nanum Gothic Coding', monospace;
 }
 
 .headerRight {
@@ -63,7 +63,7 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  border: 0.0625rem solid;
+  border: 0.0625rem solid lightgray;
   background-color: #f8f9fa;
   z-index: 1000;
   min-width: 9.375rem;
