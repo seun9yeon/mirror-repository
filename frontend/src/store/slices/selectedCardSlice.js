@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   imageId: -1,
@@ -7,7 +7,7 @@ const initialState = {
 };
 
 const selectedCardSlice = createSlice({
-  name: "selectedCard",
+  name: 'selectedCard',
   initialState,
   reducers: {
     selectCard: (state, action) => {
@@ -16,9 +16,14 @@ const selectedCardSlice = createSlice({
     },
     addTitleInCard: (state, action) => {
       state.title = action.payload.title;
-    }
+    },
+    initCard: (state) => {
+      state.imageId = -1;
+      state.title = '';
+      state.imageUrl = '';
+    },
   },
 });
 
-export const {selectCard, addTitleInCard} = selectedCardSlice.actions;
+export const { selectCard, addTitleInCard, initCard } = selectedCardSlice.actions;
 export default selectedCardSlice.reducer;

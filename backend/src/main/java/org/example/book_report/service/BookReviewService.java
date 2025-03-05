@@ -47,14 +47,19 @@ public class BookReviewService {
     }
 
     @Transactional
-    public CreateReviewResponseDto createReview(CreateReviewRequestDto createReviewRequestDto,
-                                                MultipartFile imageFile, User user) {
+    public CreateReviewResponseDto createReview(
+            CreateReviewRequestDto createReviewRequestDto,
+            MultipartFile imageFile, User user
+    ) {
 
         Image image = null;
         Book book;
         if (imageFile != null && !imageFile.isEmpty()) {
-
             image = imageService.uploadImage(imageFile, user);
+        } else {
+            // 기본 책 표지 이미지
+            final long id = -9L;
+            image = imageRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         }
 
         if (createReviewRequestDto.getBook().getBookId() == null) {
@@ -65,8 +70,8 @@ public class BookReviewService {
         }
 
         Long imageId = createReviewRequestDto.getReview().getImageId();
-        Image cardImage = imageRepository.findById(imageId).orElseThrow(() -> new IllegalArgumentException("카드 이미지가 없습니다."));
-
+        Image cardImage = imageRepository.findById(imageId)
+                .orElseThrow(() -> new IllegalArgumentException("카드 이미지가 없습니다."));
 
         BookReview bookReview = BookReview.builder()
                 .book(book)
@@ -78,9 +83,7 @@ public class BookReviewService {
                 .build();
 
         return CreateReviewResponseDto.from(
-                bookReviewRepository.save(
-                        (bookReview)
-                )
+                bookReviewRepository.save(bookReview)
         );
     }
 
@@ -106,8 +109,16 @@ public class BookReviewService {
     }
 
     // 유저별 감상문 모음 조회
-    public UserBookReviewsResponseDto getUserBookReviews(String username, Pageable pageable) {
-        Page<BookReview> bookReviews = bookReviewRepository.getUserBookReviews(username, pageable);
+    public UserBookReviewsResponseDto getUserBookReviews(String username, Pageable pageable, User user) {
+
+        Page<BookReview> bookReviews = null;
+        if (user!=null && user.getUsername().equals(username)) {
+
+            bookReviews = bookReviewRepository.getOwnBookReviews(username, pageable);
+        } else {
+
+            bookReviews = bookReviewRepository.getOtherBookReviews(username, pageable);
+        }
         return UserBookReviewsResponseDto.from(bookReviews);
     }
 }

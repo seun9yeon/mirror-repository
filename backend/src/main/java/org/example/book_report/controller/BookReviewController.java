@@ -9,6 +9,7 @@ import org.example.book_report.dto.response.*;
 import org.example.book_report.entity.ImageType;
 import org.example.book_report.entity.User;
 import org.example.book_report.service.BookReviewService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +26,9 @@ public class BookReviewController {
 
     private final BookReviewService bookReviewService;
 
+    @Value("${spring.data.web.pageable.default-page-size}")
+    private int size;
+
     // 감상문 상세 조회
     @GetMapping("/reviews/{reviewId}")
     public ResponseEntity<ApiResponse<BookReviewDetailResponseDto>> bookReviewDetail(
@@ -35,8 +39,8 @@ public class BookReviewController {
 
     // 메인 페이지 감상문 조회
     @GetMapping("/reviews")
-    public BookReviewsWithPageResponseDto getBookReviews(@RequestParam("title") String bookTitle, Pageable pageable) {
-        return bookReviewService.getBookReviews(bookTitle, pageable);
+    public ResponseEntity<ApiResponse<BookReviewsWithPageResponseDto>> getBookReviews(@RequestParam(value = "title", defaultValue = "") String bookTitle, Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(bookReviewService.getBookReviews(bookTitle, pageable)));
     }
 
 
@@ -106,10 +110,10 @@ public class BookReviewController {
 
     // 유저별 감상문 모음 조회
     @GetMapping("/userpage/{username}")
-    public ResponseEntity<ApiResponse<UserBookReviewsResponseDto>> getUserBookReviews(@PathVariable("username") String username, Pageable pageable) {
+    public ResponseEntity<ApiResponse<UserBookReviewsResponseDto>> getUserBookReviews(@PathVariable("username") String username, Pageable pageable, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(
                 ApiResponse.ok(
-                        bookReviewService.getUserBookReviews(username, pageable)
+                        bookReviewService.getUserBookReviews(username, pageable, user)
                 )
         );
     }

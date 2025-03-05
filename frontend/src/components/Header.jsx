@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../styles/Header.module.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import authApi from '../api/authApi';
+import logo from '../../public/book.png';
 
 export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const auth = useSelector((state) => state.auth);
   const [isLoggedIn, setIsLoggedIn] = useState(auth.isLoggedIn); // 로그인 상태 관리
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsProfileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     dispatch(logout());
@@ -23,7 +29,9 @@ export default function Header() {
     <div className={styles.header}>
       {isLoggedIn ? (
         <>
-          <h1>로그인 시</h1>
+          <Link to="/">
+            <img src={logo} alt="" className={styles.logo} />
+          </Link>
           <div className={styles.headerRight}>
             <Link to="/reviews/create" className={styles.link}>
               감상문 작성하기
