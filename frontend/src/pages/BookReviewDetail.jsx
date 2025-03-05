@@ -92,7 +92,7 @@ export default function BookReviewDetail() {
       <section className={styles.bookSection}>
         <div className={styles.bookCoverImageSection}>
           <div className={styles.bookCoverImage}>
-            <div className={styles.mark}>⭐</div>
+            {reviewDetail.items.userId == -1 && <div className={styles.mark}>⭐</div>}
             <img src={reviewDetail?.items?.imageUrl || base9} alt="없음" />
           </div>
         </div>
