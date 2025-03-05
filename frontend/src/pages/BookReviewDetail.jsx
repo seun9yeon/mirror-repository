@@ -27,8 +27,7 @@ export default function BookReviewDetail() {
           setIsAuthor(true);
         }
       } catch (e) {
-        console.error('감상문 조회에 실패했습니다.');
-        setIsError(!isError);
+        navigate('/not-found');
       }
     }
     fetchBookReviewDetail();
@@ -66,10 +65,6 @@ export default function BookReviewDetail() {
     alert('유료 결제 후 이용 가능한 서비스입니다.');
   }
 
-  if (isError) {
-    return <div>조회할 수 없는 리뷰입니다.</div>;
-  }
-
   if (!reviewDetail.approved && !isAuthor) {
     return <div>비공개글입니다.</div>;
   }
@@ -77,7 +72,6 @@ export default function BookReviewDetail() {
   return (
     <main className={styles.bookReviewDetailContainer}>
       <section className={styles.bookSection}>
-        <h2>Book Information</h2>
         <div className={styles.bookCoverImageSection}>
           <div className={styles.bookCoverImage}>
             <div className={styles.mark}>⭐</div>
@@ -86,20 +80,23 @@ export default function BookReviewDetail() {
         </div>
         <div className={styles.bookDetailSection}>
           <h3>{reviewDetail?.items?.title}</h3>
-          <div>{reviewDetail?.items?.author}</div>
-          <div>{reviewDetail?.items?.publisher}</div>
+          <div>
+            {reviewDetail?.items?.author} | {reviewDetail?.items?.publisher}
+          </div>
         </div>
       </section>
       <div className={styles.dividedLine}></div>
       <section className={styles.bookReviewSection}>
         <section>
-          <Link to={`/userpage/${reviewDetail?.username}`}>
-            <h1>Review by "{reviewDetail?.username}"</h1>
-          </Link>
-          <div className={styles.postUserDetail}>
-            <div>{reviewDetail?.createdAt.slice(0, 10)}</div>
-            {isAuthor && reviewDetail?.approved ? <div>🔓</div> : <div>🔒</div>}
-            {isAuthor && (
+          <h1 className={styles.reviewTitle}>{reviewDetail?.title}</h1>
+          <div className={styles.postUserWrapper}>
+            <div className={styles.postUserDetail}>
+              <div>by {reviewDetail?.username}</div>
+
+              <div>{reviewDetail?.createdAt.slice(0, 10)}</div>
+              {isAuthor && <>{reviewDetail?.approved ? <div>🔓</div> : <div>🔒</div>}</>}
+            </div>
+            {isAuthor ? (
               <div>
                 <div onClick={handleClickManageButton} className={styles.reviewManageButton}>
                   •••
@@ -116,12 +113,17 @@ export default function BookReviewDetail() {
                   </div>
                 )}
               </div>
+            ) : (
+              <Link to={`/userpage/${reviewDetail?.username}`}>
+                <div className={styles.userPageButton}>
+                  {reviewDetail.username}님 페이지 방문하기
+                </div>
+              </Link>
             )}
           </div>
         </section>
         <hr />
         <article className={styles.bookReview}>
-          <h3>{reviewDetail?.title}</h3>
           <p>{reviewDetail?.content}</p>
         </article>
       </section>

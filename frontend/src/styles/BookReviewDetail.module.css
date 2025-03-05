@@ -1,9 +1,9 @@
 .bookReviewDetailContainer {
   display: flex;
-  gap: 5%;
+  gap: 2%;
   width: 100%;
   box-sizing: border-box;
-  padding: 5%;
+  padding: 3%;
   margin-bottom: 30px;
 }
 
@@ -12,9 +12,8 @@
   flex-direction: column;
   box-sizing: border-box;
   padding: 3%;
-  gap: 8%;
-  text-align: center;
-  margin-right: 1rem;
+  gap: 3%;
+  cursor: default;
 }
 
 .bookSection > h2 {
@@ -24,7 +23,7 @@
 
 .bookCoverImageSection {
   display: flex;
-  width: 100%;
+  width: 300px;
   height: auto;
   justify-content: center;
 }
@@ -36,8 +35,8 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  width: 50%;
-  height: auto; 
+  width: 100%;
+  height: auto;
   position: relative;
 }
 
@@ -50,24 +49,29 @@
 .mark {
   position: absolute;
   width: 20%;
-  top: 5px;
-  right: 5px;
+  top: 3%;
+  right: -3%;
   z-index: 10;
+  cursor: default;
 }
 
 .bookDetailSection {
   display: flex;
   flex-direction: column;
-  line-height: 50px;
+  line-height: 200%;
   width: 100%;
+  height: auto;
+  font-family: 'Nanum Gothic Coding', monospace;
 }
 
 .bookDetailSection > h3 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .dividedLine {
   border-left: solid 1px lightgray;
+  height: 75vh;
 }
 
 .bookReviewSection {
@@ -75,9 +79,9 @@
   flex-direction: column;
   box-sizing: border-box;
   padding: 2rem;
-  width: 70%;
+  width: 100%;
+  gap: 2%;
   height: auto;
-  gap: 20px;
 }
 
 a {
@@ -85,13 +89,24 @@ a {
   color: black;
 }
 
-.bookReviewSection h1 {
-  font-size: 1.5rem;
+.postUserWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .postUserDetail {
   display: flex;
-  gap: 5%;
+  gap: 1.5rem;
+}
+
+.postUserDetail h2 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.postUserDetail div {
+  cursor: default;
 }
 
 .manageReviewSection {
@@ -106,6 +121,7 @@ a {
   padding: 1rem;
   text-align: center;
   position: absolute;
+  right: 4.5%;
   z-index: 10;
   background: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -124,24 +140,51 @@ a {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  margin-top: 10px;
 }
 
-.bookReview > h3 {
+.reviewTitle {
   font-size: 2rem;
+  font-family: 'Nanum Gothic Coding', monospace;
+  font-weight: 700;
+  width: 100%;
+  cursor: default;
 }
 
 hr {
-    width: 100%;
-    color: lightgray;
-    
+  width: 100%;
+  color: lightgray;
 }
 
 .bookReview > p {
-    line-height: 200%;
+  line-height: 200%;
+  font-family: 'Nanum Gothic Coding', monospace;
+  font-weight: 500;
+  cursor: default;
 }
 
 .reviewManageButton {
   cursor: pointer;
 }
+
+.userPageButton {
+  padding: 0.625rem 1rem;
+  text-decoration: none;
+  border: 0.0625rem solid;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 5vh;
+  max-height: 25px;
+  margin-bottom: 3%;
+}
+
+.userPageButton:hover {
+  background-color: gold;
+}
+
