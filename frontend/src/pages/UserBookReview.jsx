@@ -1,33 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import authApi from '../api/authApi';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import authApi from '../api/authApi';
 import CardComponent from '../components/card/CardComponent';
 import style from '../styles/CardComponents.module.css';
 
 export default function UserBookReview() {
   const { username } = useParams();
-  const loginUsername = useSelector((state) => state.auth.username);
-  const [userReviews, setUserReviews] = useState([]);
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasNext, setHasNext] = useState(true);
+
 
   useEffect(() => {
-    const fetchUserReviews = async () => {
-      try {
-        const reviews = await authApi.getUserReviews(username);
-        setUserReviews(reviews.data.userBookReviews);
-      } catch (e) {
-        console.error(e);
-      }
-    };
+    setItems([]);
+    setPage(0);
+    setHasNext(true);
+  }, []);
 
-    fetchUserReviews();
-  }, [username]);
+  useEffect(() => {
+    if (hasNext) {
+      authApi.getUserReviews(username, page).then((response) => {
+        const reviews = response.data.userBookReviews || [];
+
+        setHasNext(response.data.hasNext);
+        setItems((prevItems) => [...prevItems, ...reviews]);
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [page]);
+
+  const handleScroll = useCallback(() => {
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
+      if (!loading && hasNext) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
     <>
-      {userReviews.length > 0 ? (
+      {items.length > 0 ? (
         <div className={style.cardContainer}>
-          {userReviews.map((review) => (
+          {items.map((review) => (
             <CardComponent key={review.id} review={review} />
           ))}
         </div>
