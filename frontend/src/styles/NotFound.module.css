@@ -1,0 +1,43 @@
+.notFoundWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5%;
+    height: 100vh;
+}
+
+.errorType {
+    font-size: 200px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: darkred;
+    font-weight: bolder;
+}
+
+.errorMessage {
+    font-size: 3rem;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: darkred;
+    font-weight: bolder;
+}
+
+.errorDescription {
+    font-size: 20px; 
+}
+
+.homeButton {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.5rem;
+    width: 150px;
+    border-bottom: solid 3px;
+    padding: 3%;
+    border-color: goldenrod;
+    transition: background-color 0.3s;
+    background-color: transparent;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.homeButton:hover {
+    background-color: gold;
+}
