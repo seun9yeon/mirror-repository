@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className={styles.errorType}>404</div>
       <div className={styles.errorMessage}>Page Not Found</div>
       <div className={styles.errorDescription}>
-        죄송합니다. 현재 찾을 수 없는 페이지를 요청 하셨습니다.
+        죄송합니다. 현재 찾을 수 없는 페이지를 요청하셨습니다.
       </div>
       <Link to="/">
         <div className={styles.homeButton}>Go Home!</div>
