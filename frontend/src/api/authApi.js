@@ -67,9 +67,9 @@ import axios from './axios'; // axios 인스턴스 가져오기
      * @param {String} username 감상문 목록을 조회할 사용자 이름입니다.
      * @returns {Promise} 감상문 목록 응답 데이터를 반환합니다.
      */
-    getUserReviews: async (username) => {
+    getUserReviews: async (username, pageNum) => {
       try {
-        const response = await axios.get(`/userpage/${username}`);
+        const response = await axios.get(`/userpage/${username}?page=${pageNum}&size=10`);
         return response.data;
       } catch (error) {
         console.error('감상문 목록 조회 오류:', error); // 오류 로깅
