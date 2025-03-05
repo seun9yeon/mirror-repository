@@ -47,14 +47,19 @@ public class BookReviewService {
     }
 
     @Transactional
-    public CreateReviewResponseDto createReview(CreateReviewRequestDto createReviewRequestDto,
-                                                MultipartFile imageFile, User user) {
+    public CreateReviewResponseDto createReview(
+            CreateReviewRequestDto createReviewRequestDto,
+            MultipartFile imageFile, User user
+    ) {
 
         Image image = null;
         Book book;
         if (imageFile != null && !imageFile.isEmpty()) {
-
             image = imageService.uploadImage(imageFile, user);
+        } else {
+            // 기본 책 표지 이미지
+            final long id = -9L;
+            image = imageRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         }
 
         if (createReviewRequestDto.getBook().getBookId() == null) {
