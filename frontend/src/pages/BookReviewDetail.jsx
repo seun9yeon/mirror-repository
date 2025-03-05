@@ -4,6 +4,8 @@ import styles from '../styles/BookReviewDetail.module.css';
 import reviewApi from '../api/reviewApi';
 import { useSelector } from 'react-redux';
 import base9 from '../assets/base9.png';
+import lock from '../assets/lock.png';
+import loading from '../assets/loading.png';
 
 export default function BookReviewDetail() {
   const { reviewId } = useParams();
@@ -14,7 +16,7 @@ export default function BookReviewDetail() {
   const [isAuthor, setIsAuthor] = useState(false);
   const [clickManageButton, setClickManageButton] = useState(false);
 
-  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchBookReviewDetail() {
@@ -26,6 +28,8 @@ export default function BookReviewDetail() {
         if (data.username == auth) {
           setIsAuthor(true);
         }
+
+        setIsLoading(false);
       } catch (e) {
         navigate('/not-found');
       }
@@ -65,8 +69,22 @@ export default function BookReviewDetail() {
     alert('유료 결제 후 이용 가능한 서비스입니다.');
   }
 
-  if (!reviewDetail.approved && !isAuthor) {
-    return <div>비공개글입니다.</div>;
+  if (isLoading) {
+    return (
+      <div className={styles.reviewDetailStatus}>
+        <img src={loading} alt="" />
+        <span>로딩중</span>
+      </div>
+    );
+  }
+
+  if (!isAuthor && !reviewDetail.approved) {
+    return (
+      <div className={styles.reviewDetailStatus}>
+        <img src={lock} alt="" />
+        <span>비공개 감상문입니다</span>
+      </div>
+    );
   }
 
   return (
@@ -97,7 +115,10 @@ export default function BookReviewDetail() {
               {isAuthor && <>{reviewDetail?.approved ? <div>🔓</div> : <div>🔒</div>}</>}
             </div>
             {isAuthor ? (
-              <div>
+              <div className={styles.flexBox}>
+                <Link to={`/userpage/${reviewDetail?.username}`}>
+                  <div className={styles.userPageButton}>마이페이지</div>
+                </Link>
                 <div onClick={handleClickManageButton} className={styles.reviewManageButton}>
                   •••
                 </div>
