@@ -4,7 +4,8 @@ import bookApi from '../api/bookApi';
 import reviewApi from '../api/reviewApi';
 import CardCreateSection from '../components/card/CardCreateSection';
 import styles from '../styles/BookReview.module.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { initCard } from '../store/slices/selectedCardSlice';
 
 /**
  * BookReview 컴포넌트는 도서 리뷰를 표시하고 제출하는 기능을 제공합니다.
@@ -12,6 +13,7 @@ import { useSelector } from 'react-redux';
  */
 export default function BookReview() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const selectedCardInfo = useSelector((state) => state.selectedCard);
 
   // 도서 검색 관련
@@ -96,9 +98,10 @@ export default function BookReview() {
    * @param {React.ChangeEvent<HTMLInputElement>} e - 파일 입력의 변경 이벤트.
    */
   const addImage = (e) => {
-    const addImage = e.target.files[0];
+    const addImage = e.target.files;
+
     setBookImageFile(addImage);
-    setBookImage(URL.createObjectURL(addImage));
+    setBookImage(URL.createObjectURL(addImage[0]));
   };
 
   /**
@@ -115,6 +118,7 @@ export default function BookReview() {
       alert('도서 제목, 한줄평 이미지, 한줄평, 감상문 입력은 필수입니다');
       return;
     }
+
     let bookReview;
 
     if (bookId) {
@@ -152,17 +156,18 @@ export default function BookReview() {
         imageFile: bookImageFile, // (책 표지)
       };
     }
-    await saveBookreview(bookReview);
+
+    await saveBookReview(bookReview);
   };
 
-  const saveBookreview = async (bookReview) => {
+  const saveBookReview = async (bookReview) => {
     try {
-      console.log(bookReview);
       const response = await reviewApi.createReview(bookReview);
       const { status, data } = response;
       const bookReviewId = data.bookReviewId;
 
       navigate(`/reviews/${bookReviewId}`, { replace: true });
+      dispatch(initCard());
     } catch (error) {
       console.error(error);
     }
