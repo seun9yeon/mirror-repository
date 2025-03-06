@@ -11,15 +11,13 @@ export default function UserBookReview() {
   const [loading, setLoading] = useState(false);
   const [hasNext, setHasNext] = useState(true);
 
-
-
   useEffect(() => {
     const fetchReviews = async () => {
       if (hasNext) {
         try {
           const response = await authApi.getUserReviews(username, page);
           const reviews = response.data.userBookReviews || [];
-          
+
           setHasNext(response.data.hasNext);
           setItems((prevItems) => [...prevItems, ...reviews]);
         } finally {
@@ -27,9 +25,15 @@ export default function UserBookReview() {
         }
       }
     };
-    
+
     fetchReviews();
-  }, [page]);
+  }, [username, page]);
+
+  useEffect(() => {
+    setItems([]);
+    setPage(0);
+    setHasNext(true);
+  }, [username]);
 
   const handleScroll = useCallback(() => {
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
