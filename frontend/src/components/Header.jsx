@@ -58,7 +58,9 @@ export default function Header() {
         </>
       ) : (
         <>
-          <h1>비로그인 시</h1>
+          <Link to="/">
+            <img src={logo} alt="" className={styles.logo} />
+          </Link>
           <Link to="/login" className={styles.link}>
             로그인
           </Link>

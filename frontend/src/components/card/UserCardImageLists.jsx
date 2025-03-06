@@ -20,7 +20,7 @@ export default function UserCardImageLists() {
         const data = response.data;
         setImages(data.images);
       } catch (e) {
-        console.error('이미지 불러오기 실패');
+        console.error('이미지 조회 실패');
       }
     }
     fetchUserCardImages();
@@ -45,7 +45,7 @@ export default function UserCardImageLists() {
         items: [...prevImages.items, ...newImages],
       }));
     } catch (e) {
-      console.error('이미지 생성에 실패했습니다.');
+      console.error('이미지 생성 실패');
     }
   }
 
@@ -53,7 +53,7 @@ export default function UserCardImageLists() {
     let addImages = Array.from(e.target.files);
 
     if (addImages.length + size > 8) {
-      alert('커스텀 이미지는 최대 8개까지 생성 가능합니다.');
+      alert('이미지는 최대 8개까지 생성 가능합니다!');
       return;
     }
 
@@ -69,7 +69,7 @@ export default function UserCardImageLists() {
         items: prevImages.items.filter((item) => item.id !== imageId),
       }));
     } catch (error) {
-      console.log('이미지 삭제에 실패했습니다.');
+      console.log('이미지 삭제 실패');
     }
   }
 
@@ -95,7 +95,10 @@ export default function UserCardImageLists() {
           hidden
           onChange={addImage}
         />
-        <span className={styles.addButton}>+</span>
+        <div className={styles.addButtonWrapper}>
+          {size !== 8 && <span className={styles.addButton}>+</span>}
+          <span className={styles.imageCount}>{size}/8</span>
+        </div>
       </label>
     </ul>
   );

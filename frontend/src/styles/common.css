@@ -83,3 +83,9 @@ input[type='password'].error,
 input[type='tel'].error {
   border-color: red; /* 에러 시 테두리 */
 }
+
+.logo {
+  height: 80px;
+  width: 80px;
+  margin-bottom: 10%;
+}

@@ -4,6 +4,8 @@ import styles from '../styles/BookReviewDetail.module.css';
 import reviewApi from '../api/reviewApi';
 import { useSelector } from 'react-redux';
 import base9 from '../assets/base9.png';
+import lock from '../assets/lock.png';
+import loading from '../assets/loading.png';
 
 export default function BookReviewDetail() {
   const { reviewId } = useParams();
@@ -14,7 +16,7 @@ export default function BookReviewDetail() {
   const [isAuthor, setIsAuthor] = useState(false);
   const [clickManageButton, setClickManageButton] = useState(false);
 
-  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchBookReviewDetail() {
@@ -26,9 +28,10 @@ export default function BookReviewDetail() {
         if (data.username == auth) {
           setIsAuthor(true);
         }
+
+        setIsLoading(false);
       } catch (e) {
-        console.error('감상문 조회에 실패했습니다.');
-        setIsError(!isError);
+        navigate('/not-found');
       }
     }
     fetchBookReviewDetail();
@@ -66,41 +69,56 @@ export default function BookReviewDetail() {
     alert('유료 결제 후 이용 가능한 서비스입니다.');
   }
 
-  if (isError) {
-    return <div>조회할 수 없는 리뷰입니다.</div>;
+  if (isLoading) {
+    return (
+      <div className={styles.reviewDetailStatus}>
+        <img src={loading} alt="" />
+        <span>로딩중</span>
+      </div>
+    );
   }
 
-  if (!reviewDetail.approved && !isAuthor) {
-    return <div>비공개글입니다.</div>;
+  if (!isAuthor && !reviewDetail.approved) {
+    return (
+      <div className={styles.reviewDetailStatus}>
+        <img src={lock} alt="" />
+        <span>비공개 감상문입니다</span>
+      </div>
+    );
   }
 
   return (
     <main className={styles.bookReviewDetailContainer}>
       <section className={styles.bookSection}>
-        <h2>Book Information</h2>
         <div className={styles.bookCoverImageSection}>
           <div className={styles.bookCoverImage}>
-            <div className={styles.mark}>⭐</div>
+            {reviewDetail.items.userId == -1 && <div className={styles.mark}>⭐</div>}
             <img src={reviewDetail?.items?.imageUrl || base9} alt="없음" />
           </div>
         </div>
         <div className={styles.bookDetailSection}>
           <h3>{reviewDetail?.items?.title}</h3>
-          <div>{reviewDetail?.items?.author}</div>
-          <div>{reviewDetail?.items?.publisher}</div>
+          <div>
+            {reviewDetail?.items?.author} | {reviewDetail?.items?.publisher}
+          </div>
         </div>
       </section>
       <div className={styles.dividedLine}></div>
       <section className={styles.bookReviewSection}>
         <section>
-          <Link to={`/userpage/${reviewDetail?.username}`}>
-            <h1>Review by "{reviewDetail?.username}"</h1>
-          </Link>
-          <div className={styles.postUserDetail}>
-            <div>{reviewDetail?.createdAt.slice(0, 10)}</div>
-            {isAuthor && reviewDetail?.approved ? <div>🔓</div> : <div>🔒</div>}
-            {isAuthor && (
-              <div>
+          <h1 className={styles.reviewTitle}>{reviewDetail?.title}</h1>
+          <div className={styles.postUserWrapper}>
+            <div className={styles.postUserDetail}>
+              <div>by {reviewDetail?.username}</div>
+
+              <div>{reviewDetail?.createdAt.slice(0, 10)}</div>
+              {isAuthor && <>{reviewDetail?.approved ? <div>🔓</div> : <div>🔒</div>}</>}
+            </div>
+            {isAuthor ? (
+              <div className={styles.flexBox}>
+                <Link to={`/userpage/${reviewDetail?.username}`}>
+                  <div className={styles.userPageButton}>마이페이지</div>
+                </Link>
                 <div onClick={handleClickManageButton} className={styles.reviewManageButton}>
                   •••
                 </div>
@@ -116,12 +134,17 @@ export default function BookReviewDetail() {
                   </div>
                 )}
               </div>
+            ) : (
+              <Link to={`/userpage/${reviewDetail?.username}`}>
+                <div className={styles.userPageButton}>
+                  {reviewDetail.username}님 페이지 방문하기
+                </div>
+              </Link>
             )}
           </div>
         </section>
         <hr />
         <article className={styles.bookReview}>
-          <h3>{reviewDetail?.title}</h3>
           <p>{reviewDetail?.content}</p>
         </article>
       </section>

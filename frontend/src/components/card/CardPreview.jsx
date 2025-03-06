@@ -43,7 +43,7 @@ export default function CardPreview() {
         />
       )}
 
-      <div className={styles.displayText}>{inputValue || '한줄평 작성하기'}</div>
+      <div className={styles.displayText}>{inputValue || '이곳을 클릭하여\n 한줄평을 작성해보세요!'}</div>
 
       <textarea
         id="hiddenTextarea"
