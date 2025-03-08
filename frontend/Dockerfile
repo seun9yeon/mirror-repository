@@ -1,7 +1,7 @@
 # 베이스 이미지
 # 폴더 및 파일 복사
 # 프로젝트 빌드 명령어 실행
-# 서비스 실행 명령어 -> 컨테이너가 실행될 떄 CMD
+# 서비스 실행 명령어 -> 컨테이너가 실행될 때 CMD
 FROM node AS build
 WORKDIR /app
 
@@ -30,8 +30,8 @@ FROM nginx:mainline-alpine-slim
 EXPOSE 80 443
 
 # COPY conf.d /etc/nginx/conf.d/
-COPY ./templates /etc/nginx/templates
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/deploy/templates /etc/nginx/templates
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Build Stage에서 빌드 결과물(정적 파일) 복사
 COPY --from=build /app/dist /usr/share/nginx/html
