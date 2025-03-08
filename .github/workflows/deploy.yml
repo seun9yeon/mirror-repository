@@ -4,7 +4,6 @@ on:
  push:
   branches:
     - main
-    - chore/*
 
 
 jobs:
@@ -53,9 +52,8 @@ jobs:
           echo "DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}}" >> .env
           echo "DATABASE_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}" >> .env
           echo "JWT_SECRET=${{secrets.JWT_SECRET}}" >> .env
-          echo "# Fronted" >> .env
-          echo "CLIENT_DOMAIN=${{secrets.DOMAIN}}" >> .env
           echo "CORS_ALLOWED_ORIGIN=https://${{secrets.DOMAIN}}" >> .env
+          echo "# Fronted" >> .env
           echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> .env
 
 

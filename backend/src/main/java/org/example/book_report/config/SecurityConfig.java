@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.book_report.global.security.handler.CustomAccessDeniedHandler;
 import org.example.book_report.global.security.handler.JwtAuthenticationEntryPoint;
 import org.example.book_report.global.security.jwt.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +32,8 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Value("${spring.security.cors.allowed.origin}")
+    private String origin;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -67,8 +70,10 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
+
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://3.38.253.152.sslip.io", "http://localhost"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", origin));
 
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");

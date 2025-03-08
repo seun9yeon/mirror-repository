@@ -1,5 +1,3 @@
-# .github/pull_request_template.md
-
 ## 🔍 관련 Jira 이슈
 
 - ISSUE-1

@@ -3,6 +3,7 @@ package org.example.book_report.config;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+// Security CORS 사용
 //@Configuration
 public class WebConfig implements WebMvcConfigurer {
 
