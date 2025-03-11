@@ -9,21 +9,17 @@
 ### a. 프로젝트 소개
 
 - 주제 : 카드 기반 감상문 공유 프로젝트
-- 도메인 : https://52.79.68.247.sslip.io/ (03.08 종료)
+- 도메인 : ~~https://52.79.68.247.sslip.io/ (03.08 종료)~~
 - 개발기간 : 2025.02.19~2025.03.06 (약 2주)
 - 개발인원 : 4인
 
-### b. 프로젝트 목적 및 주요 기능
+### b. 프로젝트 목적
 
-- 독서 경험 공유와 소통을 위한 온라인 플랫폼 제공
-- 개인화된 독서 기록 및 감상문 관리 시스템 구축
-- 주요 기능: 감상문 관리, 카드 형식의 감상문 접근, 도서 검색, 사용자 중심 리뷰 모음
+- 독서 경험 공유 희망자
 
-### c. 문제 정의 및 타겟
+### c. 주요 기능
 
-- 기존 플랫폼의 한계: 통합적 감상문 관리 부재, 감상문 접근 방식 단조로움
-- 독자 간 연결성 부족 및 새로운 도서 발견 기회 제한
-- 타겟: 독서 경험 공유 희망자, 다양한 관점 탐색자, 새로운 도서/독서 친구 발견 희망자
+- 감상문 관리, 카드 형식의 감상문 접근, 도서 검색, 사용자 중심 리뷰 모음
 
 ## 🛠 기술 스택
 
@@ -31,7 +27,7 @@
 - **백엔드**: <img height="24" src="https://cdn.simpleicons.org/springboot/6DB33F?viewbox=auto" /><sub>Spring Boot</sub> <img height="24" src="https://cdn.simpleicons.org/hibernate/59666C?viewbox=auto" /><sub>Hibernate</sub>
 - **데이터베이스**: <img height="24" src="https://cdn.simpleicons.org/mysql/4479A1?viewbox=auto" />
 - **인프라**: <img height="24" src="https://cdn.simpleicons.org/githubactions/2088FF?viewbox=auto" /><sub>Github Actions</sub> <img height="24" src="https://cdn.simpleicons.org/docker/2496ED?viewbox=auto" /><sub>Docker</sub> <img height="24" src="https://cdn.simpleicons.org/amazons3/569A31?viewbox=auto" /><sub>S3</sub> <img height="24" src="https://cdn.simpleicons.org/amazonec2/FF9900?viewbox=auto" /><sub>EC2</sub>
-- **이슈 및 버전 관리**: <img height="24" src="https://cdn.simpleicons.org/git/F05032?viewbox=auto" /><sub>Git, Git Hooks</sub> <img height="24" src="https://cdn.simpleicons.org/github/181717?viewbox=auto" /><sub>GitHub</sub> <img height="24" src="https://cdn.simpleicons.org/jira/0052CC?viewbox=auto" /><sub>Jira</sub> <img height="24" src="https://cdn.simpleicons.org/confluence/172B4D?viewbox=auto" /><sub>Confluence</sub>
+- **버전 및 이슈 관리**: <img height="24" src="https://cdn.simpleicons.org/git/F05032?viewbox=auto" /><sub>Git, Git Hooks</sub> <img height="24" src="https://cdn.simpleicons.org/github/181717?viewbox=auto" /><sub>GitHub</sub> <img height="24" src="https://cdn.simpleicons.org/jira/0052CC?viewbox=auto" /><sub>Jira</sub> <img height="24" src="https://cdn.simpleicons.org/confluence/172B4D?viewbox=auto" /><sub>Confluence</sub>
 
 ## 👨‍👩‍👧‍👦 유저 플로우
 
@@ -47,7 +43,7 @@
     - 가입 페이지, 메인 페이지, 감상문 작성 페이지, 유저 페이지
 > 도구: Obsidian - Excalidraw
 
-## 아키텍처
+## 🖥️ 아키텍처
 ![architecture](document/readme-file/architecture.png)
 
 - 배포, 시스템, 네트워크(요청/응답) 흐름을 포함합니다.
@@ -76,7 +72,7 @@
 - 디스코드 웹훅 URL
 
 
-### 로컬 실행(Docker compose)
+### 로컬 실행(Docker Compose)
 
 - 프로젝트 루트 위치
 - `.env.development.local.example` 을 `.env.development.local` 로 복사하여 **환경 변수 작성**
