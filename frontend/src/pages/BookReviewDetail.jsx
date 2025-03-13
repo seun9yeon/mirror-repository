@@ -17,6 +17,7 @@ export default function BookReviewDetail() {
   const [clickManageButton, setClickManageButton] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
+  
 
   useEffect(() => {
     async function fetchBookReviewDetail() {

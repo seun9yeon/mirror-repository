@@ -6,6 +6,9 @@ services:
       - .env.development.local
     volumes:
       - db-volume:/var/lib/mysql
+      - /etc/letsencrypt/live/43.200.178.40.sslip.io/fullchain.pem:/etc/letsencrypt/live/${DOMAIN}/fullchain.pem
+      - /etc/letsencrypt/live/43.200.178.40.sslip.io/privkey.pem:/etc/letsencrypt/live/${DOMAIN}/privkey.pem
+
     networks:
       - db-network
     healthcheck:
@@ -22,7 +25,7 @@ services:
         - type=local,dest=/tmp/.buildx-cache/api,mode=max
       cache_from: 
         - type=local,src=/tmp/.buildx-cache/api
-    image: cloakingghost/book-backend:test
+    image: seun9yeon/api-image:latest
     env_file:
       - .env.development.local
     networks:
@@ -42,7 +45,7 @@ services:
         - type=local,dest=/tmp/.buildx-cache/client,mode=max
       cache_from: 
         - type=local,src=/tmp/.buildx-cache/client
-    image: cloakingghost/book-front:test
+    image: seun9yeon/client-image:latest
     env_file:
       - .env.development.local
     ports:
